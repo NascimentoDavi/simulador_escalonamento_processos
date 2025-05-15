@@ -36,3 +36,12 @@ def desenhar_gantt(gantt):
         gnt.broken_barh([(inicio, fim - inicio)], (10 + i*10, 9), facecolors=('tab:blue'))
 
     plt.show()
+
+
+# # ERRO COMUM:
+# qt.glx: qglx_findConfig: Failed to finding matching FBConfig for QSurfaceFormat(version 2.0, options QFlags<QSurfaceFormat::FormatOption>(), depthBufferSize -1, redBufferSize 1, greenBufferSize 1, blueBufferSize 1, alphaBufferSize -1, stencilBufferSize -1, samples -1, swapBehavior QSurfaceFormat::SingleBuffer, swapInterval 1, colorSpace QSurfaceFormat::DefaultColorSpace, profile  QSurfaceFormat::NoProfile)
+# No XVisualInfo for format QSurfaceFormat(version 2.0, options QFlags<QSurfaceFormat::FormatOption>(), depthBufferSize -1, redBufferSize 1, greenBufferSize 1, blueBufferSize 1, alphaBufferSize -1, stencilBufferSize -1, samples -1, swapBehavior QSurfaceFormat::SingleBuffer, swapInterval 1, colorSpace QSurfaceFormat::DefaultColorSpace, profile  QSurfaceFormat::NoProfile)
+# Falling back to using screens root_visual
+
+# Este erro ocorre quando o QT não encontra a configuração gráfica ideal para usar o OpenGL na máquina.
+# Matplotlib usa um backend em QT(Qt5Agg ou Qt6Agg) e o QT chama OpenGL
