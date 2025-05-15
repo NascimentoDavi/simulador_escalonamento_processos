@@ -1,4 +1,5 @@
 from fcfs import escalonar_fcfs
+from sjf_nao_preemptivo import escalonar_sjf_naopreemptivo
 
 def ler_entrada(arquivo):
     with open(arquivo, 'r') as f:
@@ -16,9 +17,10 @@ def ler_entrada(arquivo):
             'burst': int(duracao),
             'priority': int(prioridade)
         })
-        
+
     return processos
 
 if __name__ == '__main__':
     processos = ler_entrada("entrada.txt")
-    escalonar_fcfs(processos)
+    # escalonar_fcfs(processos)
+    escalonar_sjf_naopreemptivo(processos)
