@@ -55,6 +55,8 @@ def escalonar_sjf_naopreemptivo(processos):
     desenhar_gantt(gantt)
 
 def desenhar_gantt(gantt):
+    import matplotlib.colors as mcolors
+
     fig, gnt = plt.subplots()
     gnt.set_title("Gráfico de Gantt - SJF N Preemptivo")
     gnt.set_xlabel("Tempo")
@@ -64,7 +66,10 @@ def desenhar_gantt(gantt):
     gnt.set_yticklabels([processo[0] for processo in gantt])
     gnt.set_ylim(0, 10 + len(gantt)*20)
 
+    cores = list(mcolors.TABLEAU_COLORS.values())
+
     for i, (pid, inicio, fim) in enumerate(gantt):
-        gnt.broken_barh([(inicio, fim - inicio)], (10 + i*10, 9), facecolors=('tab:blue'))
+        cor = cores[i %  len(cores)]
+        gnt.broken_barh([(inicio, fim - inicio)], (10 + i*10, 9), facecolors=(cor))
 
     plt.show()

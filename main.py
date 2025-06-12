@@ -1,6 +1,7 @@
 import os
 from fcfs import escalonar_fcfs
 from sjf_nao_preemptivo import escalonar_sjf_naopreemptivo
+from sjf_preemptivo import escalonar_sjf_preemptivo
 
 # Lê arquivos com processos de entrada
 def ler_entrada(arquivo):
@@ -38,4 +39,6 @@ if __name__ == '__main__':
             print(f"/n--- Executando {nome_arquivo} ---")
 
             processos = ler_entrada(caminho_arquivo)
-            escalonar_fcfs(processos)
+            # escalonar_fcfs(processos)
+            # escalonar_sjf_naopreemptivo(processos)
+            escalonar_sjf_preemptivo(processos)
