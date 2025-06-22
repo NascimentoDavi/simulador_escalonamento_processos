@@ -1,64 +1,44 @@
-# SJF - Shortest Job First
-
-# O escalonador sempre escolhe o processo com menor burst time (tempo de execução) dentre os processos que já chegaram
-
-# Quando um processo começa a ser executado, ele é executado até o fim
-
 import matplotlib.pyplot as plt
+import os
 
-def escalonar_sjf_naopreemptivo(processos):
+def escalonar_sjf_naopreemptivo(processos, nome_arquivo="sjf_nao_preemptivo"):
     processos = processos.copy()  # Não altera a lista original
     n = len(processos)
     tempo_atual = 0
-    gantt = []  # armazena as informações de tempo de execução de cada processo
-    processos_executados = set() # Cria um conjunto vazio - Coleção não ordenada de elementos únicos | Serve para controlar quais processos já foram executados.
+    gantt = []
+    processos_executados = set()
 
-    print('SJF - Escalonamento')
+    print('SJF - Escalonamento Não Preemptivo')
     print(f"{'Processo':<10}{'Início':<10}{'Fim':<10}{'Espera':<10}{'Turnaround'}")
 
     while len(processos_executados) < n:
-
-        # Filtra processos que já chegaram e ainda não executaram
         disponiveis = [p for p in processos if p['arrival'] <= tempo_atual and p['id'] not in processos_executados]
-        
+
         if disponiveis:
-            # Escolhe o de menor burst (tempo de execução)
             atual = min(disponiveis, key=lambda p: p['burst'])
-
-            # Indica quando o processo pode começar a ser executado
             inicio = max(tempo_atual, atual['arrival'])
-
-            # Calcula quando o processo vai terminar sua execução            
             fim = inicio + atual['burst']
-
             espera = inicio - atual['arrival']
-
-            # Tempo desde que chega até terminar sua execução
             turnaround = fim - atual['arrival']
 
             gantt.append((atual['id'], inicio, fim))
 
-            # Tempo que último processo termina = tempo de início do processo seguinte
             tempo_atual = fim
-
-            # Adiciona o processo atual ao conjunto de processos executados
             processos_executados.add(atual['id'])
-        
-            print(f"{atual['id']:<10}{inicio:<10}{fim:<10}{espera:<10}{turnaround}")
 
+            print(f"{atual['id']:<10}{inicio:<10}{fim:<10}{espera:<10}{turnaround}")
         else:
-            
-            # Se não tem processo disponível, avança o tempo para próximo processo que vai chegar
             proximo = min([p for p in processos if p['id'] not in processos_executados], key=lambda p: p['arrival'])
             tempo_atual = proximo['arrival']
 
-    desenhar_gantt(gantt)
+    desenhar_gantt(gantt, nome_arquivo)
 
-def desenhar_gantt(gantt):
+def desenhar_gantt(gantt, nome_arquivo="sjf_nao_preemptivo"):
     import matplotlib.colors as mcolors
+    os.makedirs("graficos", exist_ok=True)
 
     fig, gnt = plt.subplots()
-    gnt.set_title("Gráfico de Gantt - SJF N Preemptivo")
+    gnt.set_title("Gráfico de Gantt - SJF Não Preemptivo")
     gnt.set_xlabel("Tempo")
     gnt.set_ylabel("Processos")
 
@@ -69,7 +49,10 @@ def desenhar_gantt(gantt):
     cores = list(mcolors.TABLEAU_COLORS.values())
 
     for i, (pid, inicio, fim) in enumerate(gantt):
-        cor = cores[i %  len(cores)]
-        gnt.broken_barh([(inicio, fim - inicio)], (10 + i*10, 9), facecolors=(cor))
+        cor = cores[i % len(cores)]
+        gnt.broken_barh([(inicio, fim - inicio)], (10 + i*10, 9), facecolors=cor)
 
-    plt.show()
+    caminho = f"graficos/{nome_arquivo}.png"
+    plt.savefig(caminho)
+    plt.close()
+    print(f"Gráfico salvo em: {caminho}")
